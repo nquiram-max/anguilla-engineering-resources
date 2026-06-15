@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anguilla Engineering Resources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #161b22;
+    --surface: #161b22;
+    --surface2: #1c2430;
+    --border: #2a3441;
+    --accent: #f0a500;
+    --accent2: #e85d2f;
+    --teal: #2dd4bf;
+    --text: #e6edf3;
+    --muted: #7d8fa3;
+    --best: #f0a500;
+    --tag-bg: #1e2d3d;
+    --tag-text: #7ec8e3;
+    --radius: 10px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0f1923 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 32px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  header h1 {
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-weight: 800;
+    font-size: 1.45rem;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  header h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 8px;
+    color: #ffffff;
+    opacity: 0.92;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 760px;
+  }
+  .subtitle-note {
+    margin-top: 4px;
+    color: #ffffff;
+    opacity: 0.75;
+    font-size: 0.88rem;
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 760px;
+  }
+
+  /* ---- SEARCH + FILTERS ---- */
+  .search-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .search-wrap svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); pointer-events: none;
+  }
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 0;
+  }
+  #searchInput {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 14px 9px 38px;
+    color: var(--text);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  #searchInput:focus { border-color: var(--accent); }
+  #searchInput::placeholder { color: var(--muted); }
+
+  select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 14px;
+    color: var(--text);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s;
+    appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d8fa3' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  select:focus { border-color: var(--accent); }
+
+  .filter-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 16px;
+    color: var(--muted);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: rgba(240,165,0,.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .result-count {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 6px 0;
+    flex-basis: 100%;
+  }
+  .result-count span { color: var(--accent); font-weight: 600; }
+
+  /* ---- MAIN ---- */
+  main { padding: 24px 32px 48px; max-width: 1600px; margin: 0 auto; }
+
+  /* ---- GRID ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* ---- CARD ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(240,165,0,.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  .card.best-pick {
+    border-color: rgba(240,165,0,.4);
+    box-shadow: 0 0 0 1px rgba(240,165,0,.15) inset;
+  }
+
+  /* Preview area */
+  .card-preview {
+    width: 100%;
+    height: 180px;
+    background: var(--surface2);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .card-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    pointer-events: none;
+  }
+  .card-preview .preview-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    background: linear-gradient(135deg, #1a2332, #0f1923);
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 16px;
+  }
+  .card-preview .preview-placeholder .icon { font-size: 36px; margin-bottom: 4px; }
+  .card-preview .preview-placeholder .plink {
+    color: var(--teal);
+    font-size: 12px;
+    word-break: break-all;
+    max-width: 90%;
+  }
+  .preview-overlay {
+    position: absolute; inset: 0;
+    background: transparent;
+    z-index: 2;
+  }
+  .yt-thumb {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .play-btn {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px; height: 52px;
+    background: rgba(0,0,0,.75);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .2s;
+    z-index: 3;
+  }
+  .card:hover .play-btn {
+    background: rgba(240,165,0,.9);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .play-btn svg { margin-left: 3px; }
+
+  /* Best badge */
+  .best-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    z-index: 4;
+    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+
+  /* Card body */
+  .card-body {
+    padding: 14px 16px 16px;
+    display: flex; flex-direction: column;
+    gap: 10px; flex: 1;
+  }
+  .card-title {
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .card.best-pick .card-title { color: #ffd166; }
+
+  /* Tags row */
+  .tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tag-topic {
+    background: rgba(45,212,191,.12);
+    color: var(--teal);
+    border: 1px solid rgba(45,212,191,.2);
+    white-space: normal;
+    max-width: none;
+  }
+  .tag-category { background: rgba(240,165,0,.15); color: #fbbf24; border: 1px solid rgba(240,165,0,.3); font-weight: 600; }
+  .tag-age     { background: rgba(124,58,237,.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,.2); }
+  .tag-use     { background: rgba(16,185,129,.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,.2); }
+  .tag-source  { background: rgba(59,130,246,.12); color: #93c5fd; border: 1px solid rgba(59,130,246,.2); }
+  .tag-length  { background: rgba(249,115,22,.1); color: #fdba74; border: 1px solid rgba(249,115,22,.18); }
+  .tag-oces    { background: rgba(236,72,153,.1); color: #f9a8d4; border: 1px solid rgba(236,72,153,.18); }
+
+  /* Teaches */
+  .teaches {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Notes */
+  .notes-row {
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 11.5px; color: #f59e0b; line-height: 1.4;
+  }
+  .notes-row svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* Open link btn */
+  .card-link {
+    display: inline-flex;
+    align-items: center; gap: 6px;
+    margin-top: auto;
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    padding-top: 4px;
+    transition: color .2s;
+  }
+  .card-link:hover { color: var(--accent); }
+
+  /* No link */
+  .no-link {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: auto;
+    padding-top: 4px;
+    font-style: italic;
+  }
+
+  /* Empty state */
+  .empty-state {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px 20px;
+    color: var(--muted);
+  }
+  .empty-state .big { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h3 { font-family: "Avenir Next", "Segoe UI", sans-serif; font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header { padding: 20px 16px 12px; }
+    .header-top { gap: 12px; margin-bottom: 14px; }
+    .logo-icon { width: 36px; height: 36px; font-size: 18px; }
+    header h1 { font-size: 1.2rem; }
+    .subtitle { font-size: 0.88rem; margin-top: 6px; }
+    .subtitle-note { font-size: 0.8rem; margin-top: 3px; }
+    .search-wrap { margin-bottom: 10px; }
+    .controls { gap: 8px; margin-bottom: 0; }
+    select, .filter-btn { padding: 8px 12px; font-size: 12px; }
+    main { padding: 12px 16px 40px; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .card-preview { height: 160px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 16px 12px 10px; }
+    .header-top { gap: 10px; margin-bottom: 12px; }
+    .logo-icon { width: 32px; height: 32px; font-size: 16px; }
+    header h1 { font-size: 1rem; }
+    .subtitle { font-size: 0.8rem; line-height: 1.4; max-width: 100%; }
+    .subtitle-note { font-size: 0.75rem; line-height: 1.4; max-width: 100%; }
+    #searchInput { padding: 8px 12px 8px 34px; font-size: 13px; }
+    .search-wrap svg { left: 10px; width: 13px; height: 13px; }
+    .controls { gap: 6px; flex-direction: column; align-items: stretch; }
+    select, .filter-btn { padding: 8px 10px; font-size: 12px; width: 100%; }
+    main { padding: 10px 12px 32px; }
+    .grid { grid-template-columns: 1fr; gap: 10px; display: grid; }
+    .card-preview { height: 150px; }
+    .card-body { padding: 10px 12px 12px; gap: 8px; }
+    .card-title { font-size: 13px; }
+    .tags { gap: 4px; }
+    .tag { padding: 2px 7px; font-size: 10px; }
+    .teaches { font-size: 11px; }
+    .card-link { font-size: 11px; }
+  }
+
+  /* Keep the notes label on a single line; allow the note text to wrap */
+  .notes-row strong {
+    display: inline-block;
+    white-space: nowrap;
+    color: #ff8c42;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-icon">⚙️</div>
+    <div>
+      <h1>Anguilla <span>Engineering</span> Resources</h1>
+      <p class="subtitle">Curated resources to inspire and educate K-12 students on engineering concepts.</p>
+      <p class="subtitle-note">Note: Clicking on the age range will display a note explaining the rating, if one is available.</p>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search titles, topics, what it teaches…">
+  </div>
+  <div class="controls">
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+      <option value="Videos">Videos</option>
+      <option value="Digital Resources">Digital Resources</option>
+      <option value="Engineering Crash Course">Engineering Crash Course</option>
+      <option value="Video Series">Video Series</option>
+    </select>
+    <select id="gradeFilter">
+      <option value="">All Grades</option>
+      <option value="0-5">Elementary (K-5)</option>
+      <option value="6-8">Middle School (6-8)</option>
+      <option value="9-12">High School (9-12)</option>
+    </select>
+    <select id="useFilter">
+      <option value="">All Uses</option>
+      <option value="lesson">Lesson</option>
+      <option value="enrichment">Enrichment</option>
+      <option value="family friendly">Family Friendly</option>
+    </select>
+    <select id="topicFilter">
+      <option value="">All Topics</option>
+    </select>
+    <select id="sourceFilter">
+      <option value="">All Sources</option>
+    </select>
+    <button class="filter-btn" id="bestOnlyBtn">⭐ Top Picks Only</button>
+    <div class="result-count" id="resultCount"></div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<script>
+const DATA = [{"name": "Videos", "items": [{"title": "1st place Egg Drop project ideas- using SCIENCE", "best": true, "link": "https://www.youtube.com/watch?v=nsnyl8llfH4", "length": "9:48", "source": "Mark Rober", "age": "6-12", "ageNotes": "showed car collisions/air bags", "topic": "Egg Drop", "use": "family friendly", "teaches": "Explains Potential and Kinetic Energy, discusses different strategies to reduce impact and speed", "notes": "Crunch Labs Ad", "oces": ""}, {"title": "1st place Mousetrap Car Ideas", "best": false, "link": "https://www.youtube.com/watch?v=b7zWwo9dbiU", "length": "14:05", "source": "Mark Rober", "age": "4-12", "ageNotes": "", "topic": "Design", "use": "family friendly", "teaches": "Mechanical advantage, levers, pulleys, tradeoffs of speed vs. distance, friction in different locations, balancing principles, Newton's Second Law", "notes": "Crunch Labs Ad", "oces": ""}, {"title": "21 Coolest Tech at CES 2026", "best": true, "link": "https://www.youtube.com/watch?v=83TiUbFY6fY", "length": "4:34", "source": "Cybernews", "age": "K-12", "ageNotes": "", "topic": "Technology", "use": "Family Friendly", "teaches": "Cool video about cutting edge technology", "notes": "", "oces": ""}, {"title": "5 Easy At Home Science Experiments w/ Mark Rober", "best": true, "link": "https://www.youtube.com/watch?v=ekUbBot8tDA", "length": "12:14", "source": "Mark Rober & CrunchLabs", "age": "K-12", "ageNotes": "blue heart (maybe creepy?)", "topic": "Experiments", "use": "family friendly", "teaches": "vacuums, bonds, surficants/surface tension, changing variables, carbon dioxide nucleating, chemical reactions", "notes": "", "oces": ""}, {"title": "A Physics Prof Bet Me $10,000 I'm Wrong", "best": false, "link": "https://www.youtube.com/watch?v=yCsgoLc_fzI", "length": "17:55", "source": "Veritasium", "age": "9-12", "ageNotes": "challenging concept", "topic": "Energy", "use": "enrichment", "teaches": "disagreements are not problems, they are opportunities to learn", "notes": "Goes with video \"Risking My Life to Settle a Physics Debate\"", "oces": ""}, {"title": "Aerodynamics Explained by a World Record Paper Airplane Designer ", "best": true, "link": "https://www.youtube.com/watch?v=3KqjRPV9_PY", "length": "16:35", "source": "WIRED", "age": "4-12", "ageNotes": "short comment about beer", "topic": "Airplanes", "use": "family friendly", "teaches": "shows how to fold the airplanes, dihedral angle & up elevators, thrust, gravity, drag, lift, bernouli principle, Coanda effect, center of gravity, boundary layers, reynolds numbers", "notes": "", "oces": ""}, {"title": "AI for Kids: Responsible Use and How to Write PROMPTS that Work", "best": false, "link": "https://www.youtube.com/watch?v=7pK9QNQfyYQ", "length": "10:59", "source": "Smile and Learn", "age": "K-2", "ageNotes": "", "topic": "AI", "use": "lesson, enrichment", "teaches": "Good basic video ", "notes": "the animation and voices are a little weird", "oces": ""}, {"title": "Atlas Gets a Grip", "best": false, "link": "https://www.youtube.com/watch?v=-e1_QhJ1EhQ", "length": "1:20", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Technology Demo", "use": "enrichment", "teaches": "Robot Demo", "notes": "", "oces": ""}, {"title": "Atlas Partners in Parkour", "best": true, "link": "https://www.youtube.com/watch?v=tF4DML7FIWk", "length": "1:05", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Technology Demo", "use": "Family Friendly", "teaches": "Robot Parkour", "notes": "", "oces": ""}, {"title": "Before You Fly: CoDrone EDU Safety Guide", "best": false, "link": "https://www.youtube.com/watch?v=1jMr9CVSEq4", "length": "7:10", "source": "Robolink, Inc.", "age": "K-12", "ageNotes": "", "topic": "CoDrone & Safety", "use": "lesson", "teaches": "", "notes": "", "oces": "ST.K.TE.NT.3"}, {"title": "Biomimicry 101 - Examples Of How We Copied Nature", "best": false, "link": "https://www.youtube.com/watch?v=V2GvQXvjhLA", "length": "6:41", "source": "Tinyverse", "age": "K-8", "ageNotes": "butts & animal poop animation", "topic": "Nature & Technology", "use": "lesson", "teaches": "", "notes": "", "oces": ""}, {"title": "Boston Dynamics Makes AGT HISTORY With Robots Dancing To \"Don't Stop Me Now\" by Queen | AGT 2025", "best": false, "link": "https://www.youtube.com/watch?v=ptYDWP9uTis", "length": "4:36, only show until 1:30", "source": "America's Got Talent", "age": "K-12", "ageNotes": "Song: Don't Stop Me Now", "topic": "Technology Demo", "use": "Family Friendly", "teaches": "Robot Dance Demo", "notes": "Source changed to Facebook because the video was made private on YouTube", "oces": ""}, {"title": "Boston Dynamics Revives Robot Dogs For A Must-See \"Good Vibrations\" Dance-Off! | AGT 2025", "best": false, "link": "https://www.youtube.com/watch?v=o_iUqGxRRAE", "length": "4:47, only show until 2", "source": "America's Got Talent", "age": "K-12", "ageNotes": "Song: Good Vibrations", "topic": "Technology Demo", "use": "Family Friendly", "teaches": "Robot Dance Demo", "notes": "", "oces": ""}, {"title": "Boston Dynamics Spot hands-on: new dog, new tricks", "best": false, "link": "https://www.youtube.com/watch?v=bmNaLtC6vkU", "length": "5:45", "source": "The Verge", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "Teaches about Boston Dynamics updated version of Spot", "notes": "", "oces": ""}, {"title": "Building a Catapult", "best": true, "link": "https://www.youtube.com/watch?v=5P5hzargP-U", "length": "21:47", "source": "Science Max - Scholastic", "age": "K-8", "ageNotes": "", "topic": "Elastic Energy", "use": "lesson", "teaches": "elastic force, torsion", "notes": "", "oces": ""}, {"title": "Do You Love Me?", "best": false, "link": "https://www.youtube.com/watch?v=fn3KWM1kuAw", "length": "2:54", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "Song: Do You Love Me?", "topic": "Technology Demo", "use": "Family Friendly", "teaches": "Robot Dance Demo, multiple types", "notes": "", "oces": ""}, {"title": "Egg Drop From Space", "best": false, "link": "https://www.youtube.com/watch?v=BYVZh5kqaFg", "length": "26:56", "source": "Mark Rober", "age": "6-12", "ageNotes": "bleeped out curse word", "topic": "Egg Drop", "use": "family friendly", "teaches": "terminal velocity, trial and error, design choices, resiliency, redundancy", "notes": "Crunch Labs Ad", "oces": ""}, {"title": "Engineering Adventures In Space", "best": false, "link": "https://education.nationalgeographic.org/event/engineering-adventures-in-space/", "length": "36:56", "source": "National Geographic", "age": "3-8", "ageNotes": "age recommended by source", "topic": "Space", "use": "enrichment", "teaches": "Focus on Jupiter & Europa, has interactive questions, teaches about observations & solving problems, gives tips on being an engineer", "notes": "the polls & chat might be confusing since it is a recording", "oces": ""}, {"title": "Engineering Crash Course Compilation", "best": false, "link": "https://www.youtube.com/watch?v=qDcMq1SjR_I", "length": "32:13", "source": "Crash Course Kids", "age": "K-12", "ageNotes": "", "topic": "Engineering Overview", "use": "lesson", "teaches": "Engineers solve problems, overview of different types of engineers & what they do, engineering process, walks through the process of identifying a problem and how to create & choose a solution", "notes": "Playlist with the compilation broken into clips", "oces": ""}, {"title": "Engineers vs. GIANT Egg Drop", "best": false, "link": "https://www.youtube.com/watch?v=rSgvY33JRt4", "length": "16:59", "source": "CrunchLabs", "age": "K-12", "ageNotes": "", "topic": "Egg Drop", "use": "family friendly", "teaches": "Adapting to challenges & using resources wisely, creative design, different ways to solve the same challenge, explaining design with scientific principles", "notes": "Build Box/Camp crunch lab", "oces": ""}, {"title": "Friction and Momentum", "best": true, "link": "", "length": "10:42", "source": "Science Max - Scholastic", "age": "K-6", "ageNotes": "", "topic": "Friction & Momentum", "use": "lesson", "teaches": "recording results, friction, momentum, Newton's First Law, surface tension, conservation of angular momentum, forces", "notes": "", "oces": ""}, {"title": "How 3D Printers Work", "best": false, "link": "https://www.youtube.com/watch?v=HlvK6DLwCz4&list=PLQlnTldJs0ZR-L-KtbBtm1WgPjmxiDuWi&index=2", "length": "2:42", "source": "Nat Geo Kids", "age": "K-12", "ageNotes": "", "topic": "3D printers", "use": "enrichment", "teaches": "types of manufacturing, computer interaction", "notes": "", "oces": ""}, {"title": "How Dangerous is a Penny Dropped From a Skyscraper?", "best": false, "link": "https://www.youtube.com/watch?v=16Ci_2bN_zc", "length": "22:40", "source": "Veritasium", "age": "9-12", "ageNotes": "use of \"ass\", people killed by projectile gun fire", "topic": "Terminal Velocity & Falling", "use": "enrichment", "teaches": "weight to air resistance, terminal velocity & weight to air resistance ratio, drag & drag coefficients", "notes": "", "oces": ""}, {"title": "How Digital Cameras Work", "best": false, "link": "", "length": "2:04", "source": "Nat Geo Kids", "age": "K-12", "ageNotes": "", "topic": "Cameras", "use": "enrichment", "teaches": "light exposure, pixels", "notes": "", "oces": ""}, {"title": "How do solar panels work?", "best": false, "link": "https://www.youtube.com/watch?v=xKxrkht7CpY", "length": "4:58", "source": "TED-Ed - Richard Komp", "age": "4-12", "ageNotes": "need to know about electrons", "topic": "Solar Panels", "use": "enrichment", "teaches": "electricity, energy transfer", "notes": "", "oces": ""}, {"title": "How does Atlas learn?", "best": false, "link": "https://www.youtube.com/watch?v=xKK5ze3FukQ", "length": "5:42", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "Practice using Simulation, testing the limits of robots", "notes": "", "oces": ""}, {"title": "How NASA Reinvented the Wheel", "best": false, "link": "https://www.youtube.com/watch?v=vSNtifE0Z2Q", "length": "25:33", "source": "Veritasium", "age": "6-12", "ageNotes": "riding a bike without a helmet", "topic": "NASA Wheels", "use": "enrichment", "teaches": "stress, strain, properties of materials, NiTinOL, shape memory alloys, austenite, martensite, uses in stents/ as actuators/ on planes, superelasticity/pseudoelasticity, heat energy", "notes": "ties into airplane tire video", "oces": ""}, {"title": "How Submarines Work", "best": false, "link": "", "length": "2:32", "source": "Nat Geo Kids", "age": "K-12", "ageNotes": "", "topic": "Submarines", "use": "enrichment", "teaches": "ballasting, density, intro to ocean engineering, SONAR", "notes": "", "oces": ""}, {"title": "How this helicopter survived 1004 days on Mars, then disappeared...", "best": false, "link": "https://www.youtube.com/watch?v=20vUNgRdB4o", "length": "29:07", "source": "Veritasium & Astrum", "age": "4-12", "ageNotes": "", "topic": "Ingenuity Helicopter", "use": "enrichment", "teaches": "climate of Mars, Ingenuity mission, prcession/torque", "notes": "Incogni sponsorship", "oces": ""}, {"title": "How to Escape Alcatraz With Basic Engineering", "best": false, "link": "https://www.youtube.com/watch?v=pLtHyLlLt4Y", "length": "25:12", "source": "Mark Rober", "age": "6-12", "ageNotes": "Sensitive Subject (prison)", "topic": "Process & Design", "use": "family friendly", "teaches": "problem solving, scientific analysis, trial & error, planning", "notes": "Crunch Labs Ad", "oces": ""}, {"title": "How to Make an Unpoppable Bubble - Emily's Science Lab", "best": false, "link": "https://www.youtube.com/watch?v=MjBBWqeB5ko", "length": "6:08", "source": "Emily Calandrelli", "age": "K-5", "ageNotes": "", "topic": "Experiments", "use": "family friendly", "teaches": "principle of evaporation; need: purifed water, dish soap, vegetable glyerin, gloves, measuring cups, container, bubble wand, spoon", "notes": "", "oces": ""}, {"title": "How To Make Any Rube Goldberg Machine Using These 6 Simples Machines?", "best": false, "link": "https://www.youtube.com/watch?v=CBLZUGgvqiE", "length": "14:11", "source": "Zach Contraptions", "age": "4-6", "ageNotes": "based on when US learns simple machines", "topic": "Rube Golberg", "use": "enrichment", "teaches": "simple machines (all 6 in-depth), low cost everday objects used", "notes": "talks about a competition/scoring", "oces": ""}, {"title": "I Built a Roller Coaster In My Lab", "best": false, "link": "https://www.youtube.com/watch?v=9IiYOTzJ2uw", "length": "18:48", "source": "Mark Rober", "age": "6-8", "ageNotes": "pantsing & butt humor", "topic": "roller coasters", "use": "enrichment", "teaches": "trial/error, physics", "notes": "references to Phineas & Ferb, camp crunch labs ad", "oces": ""}, {"title": "Inside Disney\u2019s Secret Engineering Lab", "best": true, "link": "https://www.youtube.com/watch?v=16LuvR2CARA", "length": "12:04", "source": "CrunchLabs", "age": "K-12", "ageNotes": "", "topic": "Lab Tour", "use": "family friendly", "teaches": "sound, robots, foundations of engineering, moving floor (holo tiles). Loving to create new things", "notes": "", "oces": ""}, {"title": "Inside the lab: How does Atlas work?", "best": false, "link": "https://www.youtube.com/watch?v=EezdinoG4mk", "length": "5:49", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "About the robot Atlas", "notes": "", "oces": ""}, {"title": "Inside The Navy's Indoor Ocean", "best": false, "link": "https://www.youtube.com/watch?v=pir_muTzYM8", "length": "20:24", "source": "Veritasium", "age": "6-12", "ageNotes": "", "topic": "Waves", "use": "enrichment", "teaches": "what affects waves, physics of waves, intro to ocean engineering", "notes": "ad for brilliant at the end", "oces": ""}, {"title": "Inventing NASA Technology for Ocean Exploration", "best": false, "link": "https://education.nationalgeographic.org/event/inventing-nasa-technology-for-ocean-exploration/", "length": "43:17", "source": "National Geographic", "age": "3-8", "ageNotes": "age recommended by source", "topic": "Ocean", "use": "enrichment", "teaches": "Using drones to map the ocean & look at coral, connection of space to earth/ocean, using science & technology to study nature & animals", "notes": "", "oces": ""}, {"title": "Learn Common Gadgets in the House - Gadgets and Home Appliances Names", "best": false, "link": "https://www.youtube.com/watch?v=eYItvsY6jo8", "length": "3:06", "source": "Pumpkin Yards", "age": "K-1", "ageNotes": "would not be appropriate for older kids", "topic": "Common Appliances", "use": "lesson", "teaches": "A song about common household appliances & their uses", "notes": "", "oces": "ST.K.TE.UT.1"}, {"title": "Making Chat (ro)Bots", "best": false, "link": "https://www.youtube.com/watch?v=djzOBZUFzTw", "length": "8:27", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "Lighthearted video that demos talking robots and talks about the design of that", "notes": "", "oces": ""}, {"title": "Manmade vs. Natural Structures: What's the Difference? (Facts For Kids)", "best": false, "link": "https://www.youtube.com/watch?v=BTnqtYBUaNU", "length": "5:33", "source": "Facts for Kids", "age": "K-4", "ageNotes": "", "topic": "Nature & Technology", "use": "lesson", "teaches": "More educational, a little strange/corny at times", "notes": "", "oces": "ST.K.TE.NT.1"}, {"title": "Martial arts robots dazzle at 2026 Spring Festival Gala", "best": false, "link": "https://www.youtube.com/watch?v=mUmlv814aJo", "length": "4:50", "source": "CGTN", "age": "K-12", "ageNotes": "", "topic": "Technology Demo", "use": "Family Friendly", "teaches": "Human & Robot Performance", "notes": "", "oces": ""}, {"title": "My Rock, Paper, Scissors Robot Never Loses (+9 Other Inventions)", "best": true, "link": "https://www.youtube.com/watch?v=Twn_4AW0M6U", "length": "19:16", "source": "Mark Rober", "age": "K-12", "ageNotes": "", "topic": "Inventions", "use": "family friendly", "teaches": "friction, CNC, flexing, lamminers flow", "notes": "Build Box and Hack Pack Ad", "oces": ""}, {"title": "Natural and Man-Made | Educational Kids Song About Nature and Human Creations Zape", "best": false, "link": "https://www.youtube.com/watch?v=LTqKxwH5Yfg", "length": "2:18", "source": "Zape TV", "age": "K-1", "ageNotes": "", "topic": "Nature & Technology", "use": "lesson", "teaches": "A song, very basic lesson", "notes": "", "oces": ""}, {"title": "Revealing 5 Secret Magic Tricks With Science 2.0", "best": false, "link": "https://www.youtube.com/watch?v=e4icPIRX9nc", "length": "9:01", "source": "CrunchLabs", "age": "K-12", "ageNotes": "", "topic": "Experiments", "use": "family friendly", "teaches": "chemical reactions, air pressure/vaccum, observation, rotational momentum/gravity, air pressure, neural processes", "notes": "", "oces": ""}, {"title": "Risking My Life To Settle A Physics Debate", "best": false, "link": "https://www.youtube.com/watch?v=jyQwgBAaBag", "length": "21:37", "source": "Veritasium", "age": "9-12", "ageNotes": "bleeped out curse words", "topic": "Energy", "use": "enrichment", "teaches": "conservation of energy, travelling faster than the wind going downwind, explaining how sailboats travel faster", "notes": "", "oces": ""}, {"title": "Rocket Car", "best": true, "link": "https://www.youtube.com/watch?v=ctcfSRMMUR0&t=362s", "length": "22:02", "source": "Science Max - Scholastic", "age": "K-8", "ageNotes": "", "topic": "Newton's 3rd Law", "use": "lesson", "teaches": "Newton's 3rd Law, backstory of Newton", "notes": "", "oces": ""}, {"title": "Ronaldo vs My Unbeatable Goalie Robot", "best": true, "link": "https://www.youtube.com/watch?v=jjpjjcMeujM", "length": "2:33", "source": "Mark Rober", "age": "K-12", "ageNotes": "", "topic": "Scientific Method", "use": "family friendly", "teaches": "scientific method, trial and error", "notes": "Ad for T-Mobile & CrunchLabs/Build Box", "oces": ""}, {"title": "Rube Goldberg Machine Full Video", "best": true, "link": "https://www.youtube.com/watch?v=QjoXBuvWp2g", "length": "21:07", "source": "Science Max - Scholastic", "age": "K-12", "ageNotes": "", "topic": "Rube Golberg", "use": "lesson", "teaches": "breaks down all the parts of the above machine & still touches on air pressure, friction, simple machines, rotational energy, gravity, spring tension, energy & energy transfer, pendulums, tension, reactions, electromagentism", "notes": "", "oces": ""}, {"title": "SCIENCE CLASS #3- Why is the Sky Blue?", "best": false, "link": "https://www.youtube.com/watch?v=zr359AIjU2Q", "length": "3:45", "source": "Mark Rober", "age": "4-12", "ageNotes": "a little challenging conceptually, mentions a fart video", "topic": "Nature of Light", "use": "enrichment", "teaches": "electromagnetic waves, pitch, frequency, wavelength, visible light spectrum, curiosity and value of observation", "notes": "made during corona virus & a lot of references to it", "oces": ""}, {"title": "Simple Machines", "best": true, "link": "https://www.youtube.com/watch?v=2yde0fz61rk", "length": "22:03", "source": "Science Max - Scholastic", "age": "4-6", "ageNotes": "based on when US learns simple machines", "topic": "Simple Machines", "use": "lesson", "teaches": "Simple machines without Rube Golberg application", "notes": "", "oces": ""}, {"title": "Spot Watches Its Step", "best": false, "link": "https://www.youtube.com/watch?v=YD9EaS3VRbc", "length": "4:42", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "Spot autonomy team, training a robot using AI", "notes": "", "oces": ""}, {"title": "States of Matter", "best": true, "link": "https://www.youtube.com/watch?v=yvPWZKU0C9U", "length": "22:03", "source": "Science Max - Scholastic", "age": "3-6", "ageNotes": "lots of gas humor at the beginning", "topic": "Matter", "use": "lesson", "teaches": "Solid, Liquid, Gas + different materials that are not standard", "notes": "", "oces": ""}, {"title": "The Map of Engineering", "best": false, "link": "https://www.youtube.com/watch?v=pQgxiQAMTTo", "length": "22:08", "source": "Domain of Science", "age": "6-12", "ageNotes": "", "topic": "Types of Engineers", "use": "enrichment", "teaches": "Good conceptual map of different types of engineering", "notes": "ad to buy printables/book, ends with a sponsorship message", "oces": ""}, {"title": "The Most Misunderstood Concept in Physics", "best": false, "link": "https://www.youtube.com/watch?v=DxL2HoqLbyA", "length": "3:14", "source": "Veritasium", "age": "9-12", "ageNotes": "", "topic": "Entropy", "use": "enrichment", "teaches": "heat engine, ideal/carnot engine, Kelvin scale, first and second law of thermodynamics, air conditioning", "notes": "", "oces": ""}, {"title": "The Ridiculous Engineering of Jet Engines", "best": false, "link": "https://www.youtube.com/watch?v=QtxVdC7pBQM", "length": "15:33", "source": "Veritasium", "age": "6-12", "ageNotes": "", "topic": "Jet Engines", "use": "enrichment", "teaches": "thrust, tradeoffs of energy and efficiency, centripital force, creep, edge dislocation, optimizing for design, manufacturing", "notes": "", "oces": ""}, {"title": "The World's Most Important Machine", "best": false, "link": "https://www.youtube.com/watch?v=MiUHjLxm3V0", "length": "6:59", "source": "Veritasium & Astrum", "age": "9-12", "ageNotes": "freaking, in depth concept", "topic": "Making Computer Chips, Advanced Design", "use": "enrichment", "teaches": "transistors, making a chip, diffraction, interference, angles, Rayleigh Equation, reflection and refraction, really cool and complex technology", "notes": "", "oces": ""}, {"title": "This Ball is Impossible to Hit", "best": false, "link": "https://www.youtube.com/watch?v=T9xsTO6ujqM", "length": "0:19", "source": "Mark Rober", "age": "K-12", "ageNotes": "cheeky", "topic": "Design", "use": "family friendly", "teaches": "Newton's Third Law, coanda effect, airflow, magnus effect", "notes": "plug for camp crunch labs", "oces": ""}, {"title": "Turbulent Flow is MORE Awesome Than Laminar Flow", "best": false, "link": "https://www.youtube.com/watch?v=5zI9sG3pjVU", "length": "18:31", "source": "Veritasium", "age": "9-12", "ageNotes": "challenging concept", "topic": "Laminar Flow & Turbulent Flow", "use": "enrichment", "teaches": "Edies, vortices, flow, Reynolds Number, characteristics of different flows, boundary layers, turbulence, lift", "notes": "", "oces": ""}, {"title": "Walk, Run, Crawl, RL Fun", "best": false, "link": "https://www.youtube.com/watch?v=I44_zbEwz_w", "length": "1:07", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Technology Demo", "use": "enrichment", "teaches": "Robot Demo", "notes": "", "oces": ""}, {"title": "We made a REAL HOLOGRAM Desk like Tony Stark's!", "best": false, "link": "https://www.youtube.com/watch?v=PI6VA8ZNL-0", "length": "22:26", "source": "Hacksmith Industries", "age": "6-12", "ageNotes": "mild language (hell & damn), bleeped out curse words", "topic": "Design", "use": "family friendly", "teaches": "Really cool technology and the process of building something, good for an older student who likes the Avengers", "notes": "", "oces": ""}, {"title": "What Is a Rube Goldberg Machine?", "best": false, "link": "https://www.youtube.com/watch?v=ga4MZyzqyeM", "length": "4:55", "source": "Science Max - Scholastic", "age": "K-12", "ageNotes": "", "topic": "Rube Golberg", "use": "enrichment", "teaches": "air pressure, friction, simple machines, rotational energy, gravity, spring tension, energy", "notes": "", "oces": ""}, {"title": "What is Engineering?", "best": true, "link": "https://www.youtube.com/watch?v=H9VDkvgGmVo", "length": "3:43", "source": "Teach Engineering", "age": "3-8", "ageNotes": "", "topic": "Engineering Overview", "use": "enrichment", "teaches": "solid short plug for engineering, can tell it was made a little while ago", "notes": "", "oces": ""}, {"title": "What They (Probably) Don't Teach You About Rainbows At School", "best": false, "link": "https://www.youtube.com/watch?v=24GfgNtnjXc", "length": "3:10", "source": "Veritasium", "age": "6-12", "ageNotes": "", "topic": "Rainbows", "use": "enrichment", "teaches": "refraction and reflection, wavelength, Snell's law, caustics, scattering angles, types and explanations for special rainbows", "notes": "", "oces": ""}, {"title": "What's in a humanoid hand?", "best": false, "link": "https://www.youtube.com/watch?v=gS4rOqNDTBk", "length": "6:29", "source": "Boston Dynamics", "age": "K-12", "ageNotes": "", "topic": "Robots", "use": "enrichment", "teaches": "About the design of Atlas' hand", "notes": "", "oces": ""}, {"title": "World's Largest Jello Pool- Can you swim in Jello?", "best": false, "link": "https://www.youtube.com/watch?v=DPZzrlFCD_I", "length": "10:27", "source": "Mark Rober", "age": "3-12", "ageNotes": "mild language (freaking)", "topic": "Scientific Method", "use": "family friendly", "teaches": "Scientific method, potential energy", "notes": "", "oces": ""}]}, {"name": "Digital Resources", "items": [{"title": "NASA Home & City", "best": false, "link": "https://homeandcity.nasa.gov/", "length": "", "source": "NASA", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website; Space Exploration", "use": "enrichment, family friendly", "teaches": "Shows how space exploration and research impacts your daily life through commercial products.", "notes": "", "oces": ""}, {"title": "Eyes on the Solar System", "best": false, "link": "https://eyes.nasa.gov/apps/solar-system/", "length": "", "source": "NASA", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website; Planets and Spacecraft", "use": "enrichment, family friendly", "teaches": "Allows you to see where different planets and spacecrafts are real time and gives details about them.", "notes": "", "oces": ""}, {"title": "NASA NeMO-NET", "best": false, "link": "https://nemonet.info/", "length": "", "source": "NASA", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website; Coral and Mapping", "use": "enrichment, family friendly", "teaches": "Video game that teaches about coral & allows the user to color in an effort to map coral.", "notes": "", "oces": ""}, {"title": "Voices of Water", "best": false, "link": "https://www.unesco.org/en/virtual-science-museum/voices-water?hub=196669", "length": "", "source": "UNESCO", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website; Water", "use": "enrichment", "teaches": "Highlights 8 examples of ancient hydraulic technologies", "notes": "", "oces": ""}, {"title": "Art and Science in Dialogue", "best": false, "link": "https://www.unesco.org/en/virtual-science-museum/art-science-dialogue?hub=196669", "length": "", "source": "UNESCO", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website", "use": "enrichment", "teaches": "Different types of art that tie into different types of science: matter, sound, nature, water, and astronomy.", "notes": "", "oces": ""}, {"title": "Women in Science", "best": false, "link": "https://www.unesco.org/en/virtual-science-museum/women-science?hub=196669", "length": "", "source": "UNESCO", "age": "K-12", "ageNotes": "Will require reading", "topic": "Interactive Website", "use": "enrichment", "teaches": "Exploring women who have made contributions to science, math, and engineering. Features past and present women.", "notes": "", "oces": ""}, {"title": "The Ethics of Generative AI in the Classroom", "best": false, "link": "https://www.facinghistory.org/resource-library/ethics-generative-ai-classroom?utm_term=&utm_campaign=DSA&utm_source=adwords&utm_medium=ppc&hsa_tgt=dsa-19959388920&hsa_grp=75449327748&hsa_src=g&hsa_net=adwords&hsa_mt=&hsa_ver=3&hsa_ad=333182733490&hsa_acc=4949854077&hsa_kw=&hsa_cam=1635938820&gad_source=1&gad_campaignid=1635938820&gbraid=0AAAAADm8moahgJ3_fYjkEKaldzdi_E2J7&gclid=CjwKCAjwxITRBhBYEiwA6mZm7WdinWzg6wTB60DoVNB4IQZ4U_IvpR4uioAfN9MqB8jgNaVySM_VzxoCjgEQAvD_BwE", "length": "1 hour", "source": "Facing History and Ourselves", "age": "6-12", "ageNotes": "Rated by website", "topic": "AI", "use": "lesson", "teaches": "A free lesson plan for Teachers to use with students", "notes": "", "oces": ""}, {"title": "aiEDU", "best": false, "link": "https://www.aiedu.org/ai-explorations?gad_source=1&gad_campaignid=23830798924&gbraid=0AAAAA9mpnqiSVGpGepAxw4yD7o8fC-fuW&gclid=CjwKCAjwxITRBhBYEiwA6mZm7RajIVr-1c8qDDzM5mTuhANr-rLyrWXfZE_6C6sRSVuDFJ2rA0O07hoCKVAQAvD_BwE", "length": "Variety of Materials", "source": "aiEDU", "age": "3-12", "ageNotes": "", "topic": "AI", "use": "lesson", "teaches": "Website dedicated to AI Literacy & Readiness, fully free resources but will need to fill out a form to get a link to use them", "notes": "", "oces": ""}, {"title": "AI Literacy Lessons for Grades 6\u201312", "best": false, "link": "https://www.commonsense.org/education/collections/ai-literacy-lessons-for-grades-6-12", "length": "9 lessons ranging from 15 minutes - 50 minutes", "source": "Common Sense Media", "age": "6-12", "ageNotes": "Rated by website", "topic": "AI", "use": "lesson, enrichment", "teaches": "AI Literacy Lessons", "notes": "", "oces": ""}, {"title": "Work Zone Awareness", "best": false, "link": "https://www.palmernet.com/s/Work-Zone-Awareness-Activty-Book-2026.pdf", "length": "8 Pages", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Safety", "use": "lesson, enrichment", "teaches": "Activity pages to teach work zone safety including coloring, matching, spotting, a word search", "notes": "No answer key, unsure about the completion of the spotting exercise", "oces": ""}, {"title": "Engineering Activity Books", "best": false, "link": "https://www.palmernet.com/s/PS-1st-Explore-Engineering-Activity-Book-Palmer-Engineering.pdf", "length": "12 Pages", "source": "Palmer Exploring Engineering", "age": "K-1", "ageNotes": "", "topic": "Civil Engineering", "use": "lesson, enrichment", "teaches": "Fairly age appropriate activities to introduce kids to civil engineering", "notes": "", "oces": ""}, {"title": "Engineering Activity Books", "best": false, "link": "https://www.palmernet.com/s/Exploring-Engineering-Grades-2-4-Palmer-Engineering.pdf", "length": "12 Pages", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Civil Engineering", "use": "lesson, enrichment", "teaches": "Fairly age appropriate activities to introduce kids to civil engineering", "notes": "", "oces": ""}, {"title": "Water & Engineering", "best": false, "link": "https://www.palmernet.com/s/Importance-of-Water-Palmer-Engineering.pdf", "length": "1 Page", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Water", "use": "lesson, enrichment", "teaches": "Info sheet about water, prompts students to think about clean water uses and what they use water for", "notes": "Also included in 2-4 engineering activity book", "oces": ""}, {"title": "Water & Engineering", "best": false, "link": "https://www.palmernet.com/s/Maze-Game-Water.pdf", "length": "1 Page", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Water", "use": "lesson, enrichment", "teaches": "Maze game and teaches about water pipes", "notes": "Also included in 2-4 engineering activity book", "oces": ""}, {"title": "Engineering Bridge Inspection Coloring Activities", "best": false, "link": "https://www.palmernet.com/s/PS-Bridge-Inspection-Activity-Sheet-Palmer-Engineerng.pdf", "length": "1 Page", "source": "Palmer Exploring Engineering", "age": "K-1", "ageNotes": "", "topic": "Bridges", "use": "lesson, enrichment", "teaches": "Counting and coloring; thinking about why engineers check bridges", "notes": "Also included in PS-1 engineering activity book", "oces": ""}, {"title": "Engineering Bridge Inspection Coloring Activities", "best": false, "link": "https://www.palmernet.com/s/Bridge-Inspection-Activity-Sheet-Palmer-Engineering.pdf", "length": "1 Page", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Bridges", "use": "lesson, enrichment", "teaches": "Coloring, includes reasoning for why engineers check bridges, and asks students what they are looking for when checking the bridge", "notes": "Also included in 2-4 engineering activity book", "oces": ""}, {"title": "Engineering Bridge Inspection Coloring Activities", "best": false, "link": "https://www.palmernet.com/s/SK-Bridge-Inspection-activity-sheet-1.pdf", "length": "1 Page", "source": "Palmer Exploring Engineering", "age": "2-4", "ageNotes": "", "topic": "Bridges", "use": "lesson, enrichment", "teaches": "Coloring, includes reasoning for why engineers check bridges, and asks students what they are looking for when checking the bridge", "notes": "Also included in 2-4 engineering activity book", "oces": ""}, {"title": "Palmer Engineering Tower Challenge", "best": false, "link": "https://www.palmernet.com/s/Palmer-Engineering-Tower-Challenge.pdf", "length": "~15-30 Minutes Total", "source": "Palmer Exploring Engineering", "age": "K-12", "ageNotes": "", "topic": "Experiment", "use": "lesson, enrichment", "teaches": "Goal of building the tallest free-standing cup tower to practice teamwork, problem solving, thinking like an engineer, and hands-on learning", "notes": "Also included at the end of all engineering activity books", "oces": ""}, {"title": "YES Digital Resources", "best": false, "link": "https://yes.mos.org/", "length": "12 Units & 8 Enrichment Activities", "source": "Museum of Science, Boston", "age": "K-8", "ageNotes": "", "topic": "Hands-on Activities", "use": "lesson, enrichment, family friendly", "teaches": "Units of hands-on engineering challenges to teach the Engineering Design Process and build critical thinking and resilience. YES Enrichment challenges youth in grades K\u20138 to tackle real-world problems using the Engineering Design Process. Additional units are available to use as a STEM support.", "notes": "", "oces": ""}, {"title": "IEEE TryEngineering Lesson Plans", "best": false, "link": "https://tryengineering.org/explore-resources/?resource_type=2054", "length": "149 Lessons", "source": "Institute of Electrical and Electronics Engineers", "age": "K-12", "ageNotes": "Each Activity is Given an Age Suggestion", "topic": "Engineering Lessons", "use": "lesson, enrichment", "teaches": "149 Lesson Plans with a search bar and filtering. Linked Engineering Discipline is listed along with STEM field, age group, and collection.", "notes": "", "oces": ""}, {"title": "IEEE TryEngineering Spreadsheet", "best": false, "link": "https://docs.google.com/spreadsheets/d/19CpGYf4itv0duEVejn3PeleEb3YffJ3dTAbVk5tXryQ/edit?gid=0", "length": "133 Lessons", "source": "Institute of Electrical and Electronics Engineers", "age": "K-12", "ageNotes": "Each Activity is Given an Age Suggestion", "topic": "Engineering Lessons", "use": "lesson, enrichment", "teaches": "An alternative way to view and search the website's lessons. Lists Age, Learning Objectives, Activity, and Description. Lesson plans are linked and will take you to a lesson on the TryEngineering Website. Most lessons are 3rd+.", "notes": "", "oces": ""}, {"title": "IEEE TryEngineering Games & Hands-on Activities", "best": false, "link": "https://tryengineering.org/explore-resources/?resource_type=2058,2055", "length": "85 Games & Hands on Activities", "source": "Institute of Electrical and Electronics Engineers", "age": "K-12", "ageNotes": "Each Activity is Given an Age Suggestion", "topic": "Hands-on Activities & Games", "use": "enrichment, family friendly", "teaches": "Variety of topics, hands-on activities have a suggested age group and collection listed, games have a STEM field and a collection listed.", "notes": "", "oces": ""}, {"title": "IEEE TryEngineering Engineering Disciplines", "best": false, "link": "https://tryengineering.org/explore-resources/?resource_type=2059", "length": "25 types", "source": "Institute of Electrical and Electronics Engineers", "age": "7-12", "ageNotes": "Good for students interested in looking into what different engineers do or who are very interested in one type", "topic": "Types of Engineers", "use": "enrichment", "teaches": "Students can explore 25 different types of engineering and learn about the degree required, a day in the life, the history, job opportunities, and preparations. Provides links and videos to explore and points students to resources to dig deeper into related topics", "notes": "", "oces": ""}, {"title": "Engineering for Kids", "best": false, "link": "https://www.sciencekids.co.nz/engineering.html", "length": "", "source": "Science Kids", "age": "4-8", "ageNotes": "", "topic": "Engineering Overview", "use": "enrichment", "teaches": "Variety of games, science fair projects, experiments, facts, videos, quizzes, and worksheets", "notes": "", "oces": ""}, {"title": "Science Lesson Plans", "best": false, "link": "https://www.sciencekids.co.nz/lessonplans.html", "length": "8 lesson plans", "source": "Science Kids", "age": "4-8", "ageNotes": "", "topic": "Variety of Science", "use": "lesson, enrichment", "teaches": "8 categories of lessons (earth, animals, technology, water, biology, chemistry, flight & air, space) with different hands-on activities", "notes": "", "oces": ""}, {"title": "Discover Engineering", "best": false, "link": "https://discovere.org/stem-activities/engineering-resources-for-kids/", "length": "", "source": "Discover Engineering", "age": "K-12", "ageNotes": "", "topic": "Engineering Overview", "use": "lesson, enrichment, family friendly", "teaches": "Various hands on engineering activities, gives a suggested age and tells the topic, engineering career tie in, and estimated time", "notes": "", "oces": ""}, {"title": "TeachEngineering", "best": false, "link": "https://www.teachengineering.org/", "length": "", "source": "TeachEngineering", "age": "K-12", "ageNotes": "", "topic": "Engineering Overview", "use": "lesson, enrichment", "teaches": "Well developed K-12 STEM Curriculum, sorted into units but can access lessons and activities separately. ", "notes": "", "oces": ""}, {"title": "TeachEngineering - Types of Engineers", "best": false, "link": "https://www.teachengineering.org/k12engineering/types-of-engineering", "length": "10 types", "source": "TeachEngineering", "age": "3-8", "ageNotes": "", "topic": "Types of Engineers", "use": "enrichment", "teaches": "Different types of engineering to explore with linked curriculum for grades 3-5 and 6-8. Also includes maker challenges and informal learning activities", "notes": "", "oces": ""}, {"title": "Class CrunchLabs", "best": false, "link": "https://www.classcrunchlabs.org/", "length": "3 Units (A new one come out monthly)", "source": "Mark Rober", "age": "3-8", "ageNotes": "", "topic": "Variety of Science/ Engineering", "use": "lesson, enrichment", "teaches": "Free Middle School science curriculum developed by Mark Rober", "notes": "Crunch Labs Ad", "oces": ""}, {"title": "Science Max! Games", "best": false, "link": "https://www.tvokids.com/school-age/games/science-max", "length": "5 games & 14 experiments", "source": "TVO Kids", "age": "K-8", "ageNotes": "", "topic": "Hands-on Activities & Games", "use": "enrichment", "teaches": "Interactive science and engineering games based off of videos. Also has experiments and science trivia.", "notes": "", "oces": ""}, {"title": "PhET", "best": false, "link": "https://phet.colorado.edu/", "length": "121 Simulations", "source": "University of Colorado", "age": "K-12", "ageNotes": "", "topic": "Simulations", "use": "enrichment", "teaches": "Interactive Science and Math simulations", "notes": "", "oces": ""}, {"title": "PocketLab", "best": false, "link": "https://app.thepocketlab.com/", "length": "", "source": "PocketLab", "age": "K-12", "ageNotes": "", "topic": "Immersive Learning", "use": "lesson, enrichment", "teaches": "Physical, earth, and life science lessons and activities for teachers or students", "notes": "", "oces": ""}]}, {"name": "Engineering Crash Course", "items": [{"title": "What is Engineering?", "best": false, "link": "https://www.youtube.com/watch?v=btGYcizV0iI", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 1", "use": "lesson, enrichment", "teaches": "General overview of engineering", "notes": "minimal focus on engineering as a mathematical science", "oces": ""}, {"title": "Civil Engineering", "best": false, "link": "https://www.youtube.com/watch?v=-xbtnz4wdaA", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 2", "use": "lesson, enrichment", "teaches": "Civil Engineering, Structural/Construction Engineering, City Planning, Transportation, Sanitation", "notes": "", "oces": ""}, {"title": "Mechanical Engineering", "best": false, "link": "https://www.youtube.com/watch?v=A1V-QQ5wFU4", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 3", "use": "lesson, enrichment", "teaches": "Mechanical Engineering, Steam Engine, Aircraft, Robotics and Biomechanics", "notes": "", "oces": ""}, {"title": "Electrical Engineering", "best": false, "link": "https://www.youtube.com/watch?v=3nB1Ntku06w", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "use of electricity in electric chair", "topic": "Engineering Crash Course 4", "use": "lesson, enrichment", "teaches": "Magnetism, Electrical Conduction, Telegraphy, Lighting, Computers", "notes": "", "oces": ""}, {"title": "Chemical Engineering", "best": false, "link": "https://www.youtube.com/watch?v=aRKyJRAxjpM", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 5", "use": "lesson, enrichment", "teaches": "History of Chemical Engineering, George Davis, Chemical Refineries/Factories, Emerging Fields, Renewable Energy", "notes": "", "oces": ""}, {"title": "Biomedical & Industrial Engineering", "best": false, "link": "https://www.youtube.com/watch?v=O6lENrRANxY", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 6", "use": "lesson, enrichment", "teaches": "Industrial Engineering, Frederick Winslow Taylor, Scientific Management, Biomedical Engineering, Bioengineering, Future of Biomedical", "notes": "", "oces": ""}, {"title": "The Law of Conservation", "best": false, "link": "https://www.youtube.com/watch?v=VxCORJ8dN3Y", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 7", "use": "lesson, enrichment", "teaches": "Law of Conservation (process, system/surroundings/input/output), Steady-State-Systems, Conversion and Yield, Accumulation, Generation and Consumption", "notes": "", "oces": ""}, {"title": "Reversibility & Irreversibility", "best": false, "link": "https://www.youtube.com/watch?v=RKOPoJzqH94", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 8", "use": "lesson, enrichment", "teaches": "Efficient Machines and Processes, Heat and Work, Reversibility and Irreversibility", "notes": "", "oces": ""}, {"title": "The First & Zeroth Laws of Thermodynamics", "best": false, "link": "https://www.youtube.com/watch?v=fSEFfWf2au0", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 9", "use": "lesson, enrichment", "teaches": "Thermodynamics, Zeroth Law of Thermodynamics, Thermal Equilibrium, Types of Energies in a System, First Law of Thermodynamics, Stationary/Adiabatic/Isochoric Processes", "notes": "Video 1/3", "oces": ""}, {"title": "Why We Can't Invent a Perfect Engine", "best": false, "link": "https://www.youtube.com/watch?v=2B81W6nNds0", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "talks about the heat death of the world", "topic": "Engineering Crash Course 10", "use": "lesson, enrichment", "teaches": "Thermodynamics: comparing first & second law, Carnot Cycle, Entropy and Randomness", "notes": "Video 2/3", "oces": ""}, {"title": "Heat Engines, Refrigerators, & Cycles", "best": false, "link": "https://www.youtube.com/watch?v=iZOXW5aaCZg", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 11", "use": "lesson, enrichment", "teaches": "Cycles & repetition as an engineer is related, Heat Engines, Refrigerators and Heat Pumps, Phase Diagrams, Renewable Energy Resources", "notes": "Video 3/3", "oces": ""}, {"title": "Stress, Strain & Quicksand", "best": false, "link": "https://www.youtube.com/watch?v=ouTJkNLepF0", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "shows someone dying from quicksand", "topic": "Engineering Crash Course 12", "use": "lesson, enrichment", "teaches": "Fluid Mechanics, No-Slip Condition, Stress & Strain, Fluid Movement, Reynolds Number, Laminar and Turbulent Flow", "notes": "Video 1/4", "oces": ""}, {"title": "Fluid Flow & Equipment", "best": false, "link": "https://www.youtube.com/watch?v=bRrfsv9hiX4", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 13", "use": "lesson, enrichment", "teaches": "Fluid Flow, Bernoulli's Principle & Equation", "notes": "Video 2/4", "oces": ""}, {"title": "Heat Transfer", "best": false, "link": "https://www.youtube.com/watch?v=YK7G6l_K6sA", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 14", "use": "lesson, enrichment", "teaches": "Heat Transfer, Conduction, Thermal Conductivity of Materials, Convection, Radiation", "notes": "Video 3/4", "oces": ""}, {"title": "How Not to Set Your Pizza on Fire", "best": false, "link": "https://www.youtube.com/watch?v=B0CwRyBlt1s", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 15", "use": "lesson, enrichment", "teaches": "Types of Heat Exchangers, Concentric Tubes, Two Main Equations, Finned Tubes, Plate Heat Exchangers, Shell-and-Tube", "notes": "Video 4/4", "oces": ""}, {"title": "Drugs, Dyes, & Mass Transfer", "best": false, "link": "https://www.youtube.com/watch?v=-YTC3A6dEGM", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 16", "use": "lesson, enrichment", "teaches": "Mass Transfer, Chemical Equilibrium, Concentration, Diffusion, Fick's Law", "notes": "", "oces": ""}, {"title": "Mass Separation", "best": false, "link": "https://www.youtube.com/watch?v=YjuZs8PFIEU", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "brief talk about bars/alcohol", "topic": "Engineering Crash Course 17", "use": "lesson, enrichment", "teaches": "Separating Chemicals, Distillation, Solubility, Liquid-Liquid Extraction, Reverse Osmosis", "notes": "", "oces": ""}, {"title": "Reaching Breaking Point: Materials, Stresses, & Toughness", "best": false, "link": "https://www.youtube.com/watch?v=GpiBSFMFe-w", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 18", "use": "lesson, enrichment", "teaches": "Materials, Mechanical Properties, Stress-Strain Diagrams, Material Properties", "notes": "", "oces": ""}, {"title": "Metals & Ceramics", "best": false, "link": "https://youtube.com/watch?v=NOK1nMiiTWU&pp=0gcJCQQLAYcqIYzv", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 19", "use": "lesson, enrichment", "teaches": "Metals, Ceramics, Metal Alloys, Importance of Ceramics, Application of Materials", "notes": "", "oces": ""}, {"title": "The Polymer Explosion", "best": false, "link": "https://www.youtube.com/watch?v=XjDDHnByfuo", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 20", "use": "lesson, enrichment", "teaches": "Polymers, Repeating Chains of Monomers, History of Polymers, Polymer Use Cases", "notes": "", "oces": ""}, {"title": "Electrical Power, Conductors, & Your Dream Home", "best": false, "link": "https://www.youtube.com/watch?v=uTWHMchUlws", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 21", "use": "lesson, enrichment", "teaches": "Materials, High Conductivity, Insulators, Low Conductivity", "notes": "", "oces": ""}, {"title": "Silicon, Semiconductors, & Solar Cells", "best": false, "link": "https://www.youtube.com/watch?v=ivWXuOd5SrI", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 22", "use": "lesson, enrichment", "teaches": "Silicon, N and P Semiconductors, Biodes, Transistors, Solar Cells", "notes": "", "oces": ""}, {"title": "The Mighty Power of Nanomaterials", "best": false, "link": "https://www.youtube.com/watch?v=IkYimZBzguw", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 23", "use": "lesson, enrichment", "teaches": "Nanomaterials, Special Properties of Nanomaterials, Effects of Engineered vs. Natural", "notes": "", "oces": "ST.6.TE.NT.2"}, {"title": "Biomaterials", "best": false, "link": "https://www.youtube.com/watch?v=-jw8osY5QJM", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "talk of IUDs/infections", "topic": "Engineering Crash Course 24", "use": "lesson, enrichment", "teaches": "Biomaterials, Alloys, Chemistry of Polyurethane, Boost Body's Behaviors, Safety Research", "notes": "", "oces": ""}, {"title": "Cheese, Catastrophes, & Process Control", "best": false, "link": "https://www.youtube.com/watch?v=BT_JUbpZ1lQ&t=1s", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 25", "use": "lesson, enrichment", "teaches": "Process Control Systems, Feed Foward and Feedback Systems, Integrating Both Systems, Cascade Control", "notes": "", "oces": ""}, {"title": "Skyscrapers, Statics, & Dynamics", "best": false, "link": "https://www.youtube.com/watch?v=xOkJFrXg8V0&t=1s", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 26", "use": "lesson, enrichment", "teaches": "Statics and Dynamics, Static Equilibrium, Forces, Torques, Free-Body Diagrams", "notes": "watch the video on stress/strain first", "oces": ""}, {"title": "Engineering Ethics", "best": false, "link": "https://www.youtube.com/watch?v=5KZx81crb48", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 27", "use": "lesson, enrichment", "teaches": "Ethics, Code of Ethics, Different Types of Ethics, Citicorp Reexamined", "notes": "", "oces": ""}, {"title": "Flirting With Disaster - The Importance of Safety", "best": false, "link": "https://www.youtube.com/watch?v=WavEcAsI2AY", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 28", "use": "lesson, enrichment", "teaches": "Safety, Occupational Safety, Public Safety, HAZOP, LOPA", "notes": "", "oces": ""}, {"title": "Preventing Flint - Environmental Engineering", "best": false, "link": "https://www.youtube.com/watch?v=uHUO6PrsOzg", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 29", "use": "lesson, enrichment", "teaches": "Environmental Engineering, Manage our Impact, Water Quality, Air Quality, Different Types of Pollution", "notes": "", "oces": ""}, {"title": "The Engineering Challenges of Renewable Energy", "best": false, "link": "https://www.youtube.com/watch?v=4k5gyYAAEEU", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 30", "use": "lesson, enrichment", "teaches": "Renewable Energy Sources, Hydropower, Wind, Geothermal, Solar Power, Challenges, Improvement", "notes": "", "oces": ""}, {"title": "The Future of Clean Energy", "best": false, "link": "https://www.youtube.com/watch?v=v6uRuNboy4A", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "poop as an energy source", "topic": "Engineering Crash Course 31", "use": "lesson, enrichment", "teaches": "Alternative Energy Sources, Burning Biomass, Fuel Cells, Nuclear Fission, Nuclear Fusion", "notes": "", "oces": ""}, {"title": "Why It's So Hard To Make Better Batteries", "best": false, "link": "https://www.youtube.com/watch?v=A5GgBTFSUu4", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "use of phone, \"hey dummy\" message at beginning", "topic": "Engineering Crash Course 32", "use": "lesson, enrichment", "teaches": "Batteries, Discharge Ions, Reverse Process to Charge, Voltage Delivery, Discharge Curves, Battery Properties", "notes": "", "oces": ""}, {"title": "How Engineering Robots Works", "best": false, "link": "https://www.youtube.com/watch?v=uNfUAJBuZ0s", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 33", "use": "lesson, enrichment", "teaches": "Engineering Principles of Robots, Sensors, Actuators and Effects, Computers Computing", "notes": "", "oces": ""}, {"title": "To The Moon & Mars - Aerospace Engineering", "best": false, "link": "https://www.youtube.com/watch?v=UvtYn2j78gw", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 34", "use": "lesson, enrichment", "teaches": "Aeronautical, Astronautical, Lift & Buoyancy, Humans in Space", "notes": "", "oces": ""}, {"title": "Computer Engineering & the End of Moore's Law", "best": false, "link": "https://www.youtube.com/watch?v=04ht0kSJ0I4", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 35", "use": "lesson, enrichment", "teaches": "Computers, Computer Engineering, Moore's Law, Hardware, Software, CAD & CAM", "notes": "", "oces": ""}, {"title": "How to Engineer Health - Drug Discovery & Delivery", "best": false, "link": "https://www.youtube.com/watch?v=gIkMNn-A_Y4", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 36", "use": "lesson, enrichment", "teaches": "Discovery and Delivery, Classical Pharmacology, Reverse Pharmacology, Synthetic Biology, Good Disease Detection, Targeted Drug Delivery Systems", "notes": "", "oces": ""}, {"title": "Smart Tattoos & Tiny Robots", "best": false, "link": "https://www.youtube.com/watch?v=EyYdZYqTLFU", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 37", "use": "lesson, enrichment", "teaches": "Biodevices, Biocompatibility, Power, Connectivity, Packaging, Structural Design, Delivery Systems, Device Management", "notes": "", "oces": ""}, {"title": "Changing the Blueprints of Life - Genetic Engineering", "best": false, "link": "https://www.youtube.com/watch?v=FY_ZUEKWhBc", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 38", "use": "lesson, enrichment", "teaches": "Genetic Engineering, DNA, Agricultural Practices, Optogenetics, CRISPR", "notes": "", "oces": ""}, {"title": "Mass-Producing Ice Cream with Food Engineering", "best": false, "link": "https://www.youtube.com/watch?v=MH4GgKsf7-U", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "animated guy laying on the couch in underwear at the beginning", "topic": "Engineering Crash Course 39", "use": "lesson, enrichment", "teaches": "Food Engineering, Thermodynamics, Safety to Consumers (Process Control and Pasteurization), Homogenization", "notes": "", "oces": ""}, {"title": "How the Leaning Tower of Pisa Was Saved", "best": false, "link": "https://www.youtube.com/watch?v=5mkeoVpTaMA", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 40", "use": "lesson, enrichment", "teaches": "Geotechnical, Seismic Engineering, Connecting Structures to the Ground, Transmit Loads, Bearing Capacity, Seismic Activity", "notes": "", "oces": ""}, {"title": "Why Moving People is Complicated", "best": false, "link": "https://www.youtube.com/watch?v=erYf6NNw8Ec", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 41", "use": "lesson, enrichment", "teaches": "Transportation Engineering, Designing Transport Systems, Improving Transportation, Signals, Traffic Flow, Improving", "notes": "", "oces": ""}, {"title": "YouTube Couldn't Exist Without Communications & Signal Processing", "best": false, "link": "https://www.youtube.com/watch?v=VjuFaPAIOHw", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 42", "use": "lesson, enrichment", "teaches": "Signal Processing, Morse Code, Wired and Wireless Communications, Bandwidth, Claude Shannon", "notes": "", "oces": ""}, {"title": "How Seawater Sabotages Ships", "best": false, "link": "https://www.youtube.com/watch?v=J9A55q7AR6E", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 43", "use": "lesson, enrichment", "teaches": "Marine Engineering & Challenges, Corrosion, Solutions, Maritime Structures", "notes": "", "oces": ""}, {"title": "Building a Desalination Plant from Scratch", "best": false, "link": "https://www.youtube.com/watch?v=ke5jUHe4fII", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 44", "use": "lesson, enrichment", "teaches": "Design Synthesis, Scaling Designs, Improving Designs", "notes": "", "oces": ""}, {"title": "How To Become An Engineer", "best": false, "link": "https://www.youtube.com/watch?v=77xMVKOEZ5g", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 45", "use": "lesson, enrichment", "teaches": "Different Engineering Paths", "notes": "", "oces": ""}, {"title": "The Biggest Problems We're Facing Today & The Future of Engineering", "best": false, "link": "https://www.youtube.com/watch?v=Fzq_yuj-oZM", "length": "About 10 minutes", "source": "Crash Course", "age": "6-12", "ageNotes": "Any student would likely get something out of it", "topic": "Engineering Crash Course 46", "use": "lesson, enrichment", "teaches": "Future of Engineering, Carbon Sequestration, Infrastructure, Education, Artificial Intelligence", "notes": "", "oces": ""}]}, {"name": "Video Series", "items": [{"title": "PBS Design Squad", "best": false, "link": "https://pbskids.org/videos/design-squad", "length": "About 25 Minutes Each", "source": "PBS Kids", "age": "4-8", "ageNotes": "The design work can get tense/heated and the kids don't always respond to this in the best way. Not the best example of the design process for younger students.", "topic": "Engineering Series", "use": "enrichment", "teaches": "Two teams of kids are tasked with a problem, then they brainstorm, create a sketch model, and a final product to present to a client where a winner is declared.", "notes": "A bit of an older resource. Unsure if PBS is accessible in Anguilla.", "oces": ""}, {"title": "Bill Nye The Science Guy Full Videos", "best": false, "link": "https://www.youtube.com/@BillNyeTheScienceGuyHD", "length": "About 23 Minutes Each", "source": "Bill Nye the Science Guy HD", "age": "K-8", "ageNotes": "", "topic": "Science Series", "use": "lesson, enrichment, family friendly", "teaches": "", "notes": "A bit of an older resource", "oces": ""}, {"title": "Bill Nye The Science Guy Clips", "best": false, "link": "https://www.youtube.com/playlist?list=PL1LHolB1n6e4x5Zq7vtuVlzFNGr0beE7n", "length": "About 2 Minutes Each", "source": "Bill Nye", "age": "K-8", "ageNotes": "", "topic": "Science Clips", "use": "enrichment, family friendly", "teaches": "", "notes": "A bit of an older resource", "oces": ""}, {"title": "Science Max (Scholastic)", "best": false, "link": "https://www.youtube.com/playlist?list=PLY2vSQEVraKBRm12qORAXtImpDSq_wQ7w", "length": "About 22 Minutes Each", "source": "Scholastic", "age": "K-8", "ageNotes": "", "topic": "Science/ Engineering Series", "use": "lesson, enrichment, family friendly", "teaches": "", "notes": "", "oces": ""}]}]
+
+// ---- State ----
+let categoryFilter = '';
+let searchQ = '';
+let gradeFilter = '';
+let useFilter = '';
+let topicFilter = '';
+let sourceFilter = '';
+let bestOnly = false;
+
+function getAllItems() {
+  return DATA.flatMap(tab => tab.items.map(item => ({ ...item, category: tab.name })));
+}
+
+function getYTId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function gradeMatch(age, filter) {
+  if (!filter) return true;
+  const a = (age || '').trim().toLowerCase();
+  if (!a || a === 'none') return false;
+
+  // Parse a grade string like "k", "1", "2nd", "3rd-8th" into a [min, max] number range
+  function parseGrade(str) {
+    str = str.trim().toLowerCase().replace(/st|nd|rd|th/g, '');
+    if (str === 'k') return 0;
+    return parseInt(str) || 0;
+  }
+
+  // Normalize the age field into [min, max]
+  let min, max;
+  if (a === 'k-12' || a === 'any') {
+    min = 0; max = 12;
+  } else if (a.includes('-')) {
+    const [lo, hi] = a.split('-');
+    min = parseGrade(lo);
+    max = parseGrade(hi);
+  } else {
+    min = max = parseGrade(a);
+  }
+
+  // Determine filter range: support either named ranges (elementary/middle/high)
+  // or explicit numeric ranges like "0-5", "6-8", "9-12" used in the select.
+  let fMin, fMax;
+  if (String(filter).includes('-')) {
+    const parts = String(filter).split('-').map(s => parseInt(s, 10));
+    fMin = parts[0];
+    fMax = parts[1];
+  } else {
+    const ranges = {
+      elementary:  [0, 5],
+      middle:      [6, 8],
+      high:        [9, 12],
+    };
+    const r = ranges[filter];
+    if (!r) return true; // unknown filter -> don't exclude
+    fMin = r[0]; fMax = r[1];
+  }
+
+  // Overlaps if the item's range touches the filter range
+  return min <= fMax && max >= fMin;
+}
+
+function matchesSearch(item) {
+  if (!searchQ) return true;
+  const q = searchQ.toLowerCase();
+  return (
+    (item.title || '').toLowerCase().includes(q) ||
+    (item.topic || '').toLowerCase().includes(q) ||
+    (item.teaches || '').toLowerCase().includes(q) ||
+    (item.source || '').toLowerCase().includes(q)
+  );
+}
+
+function filterItems(items) {
+  return items.filter(item => {
+    if (bestOnly && !item.best) return false;
+    if (!matchesSearch(item)) return false;
+    if (gradeFilter && !gradeMatch(item.age, gradeFilter)) return false;
+    if (useFilter && !(item.use || '').toLowerCase().includes(useFilter.toLowerCase())) return false;
+    if (topicFilter && (item.topic || '').toLowerCase() !== topicFilter.toLowerCase()) return false;
+    if (sourceFilter && (item.source || '').toLowerCase() !== sourceFilter.toLowerCase()) return false;
+    if (categoryFilter && (item.category || '').toLowerCase() !== categoryFilter.toLowerCase()) return false;
+    return true;
+  });
+}
+
+function populateSourceFilter() {
+  const sel = document.getElementById('sourceFilter');
+  if (!sel) return;
+  // collect unique sources from DATA
+  const sources = new Set();
+  DATA.forEach(tab => tab.items.forEach(it => { if (it.source) sources.add(String(it.source).trim()); }));
+  // keep the first option (All Sources), remove the rest
+  while (sel.options.length > 1) sel.remove(1);
+  // add sorted sources
+  const sortedSources = Array.from(sources).sort();
+  sortedSources.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.text = s;
+    sel.appendChild(opt);
+  });
+}
+
+function populateTopicFilter() {
+  const sel = document.getElementById('topicFilter');
+  if (!sel) return;
+  const topics = new Set();
+  DATA.forEach(tab => tab.items.forEach(it => { if (it.topic) topics.add(String(it.topic).trim()); }));
+  // keep the first option (All Topics), remove the rest
+  while (sel.options.length > 1) sel.remove(1);
+  // add sorted topics
+  const sortedTopics = Array.from(topics).sort();
+  sortedTopics.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.text = t;
+    sel.appendChild(opt);
+  });
+}
+
+function populateCategoryFilter() {
+  const sel = document.getElementById('categoryFilter');
+  if (!sel) return;
+  while (sel.options.length > 1) sel.remove(1);
+  DATA.forEach(tab => {
+    const opt = document.createElement('option');
+    opt.value = tab.name;
+    opt.text = tab.name;
+    sel.appendChild(opt);
+  });
+}
+
+// ---- Render Cards ----
+function renderCards() {
+  const grid = document.getElementById('grid');
+  if (!grid) return;
+  
+  const allItems = getAllItems();
+  const items = filterItems(allItems);
+  const total = categoryFilter ? allItems.filter(item => (item.category || '').toLowerCase() === categoryFilter.toLowerCase()).length : allItems.length;
+
+  document.getElementById('resultCount').innerHTML =
+    `Showing <span>${items.length}</span> of ${total} resources`;
+
+  // Clear grid
+  grid.innerHTML = '';
+  
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="big">🔍</div>
+      <h3>No resources found</h3>
+      <p>Try adjusting your search or filters</p>
+    </div>`;
+    return;
+  }
+
+  // Add each card
+  items.forEach(item => {
+    const card = createCard(item);
+    if (card) grid.appendChild(card);
+  });
+}
+
+function createCard(item) {
+  const card = document.createElement('div');
+  card.className = 'card' + (item.best ? ' best-pick' : '');
+
+  const ytId = getYTId(item.link);
+  const isYT = !!ytId;
+  const hasLink = !!item.link;
+
+  // Preview
+  let previewHTML = '';
+  if (isYT) {
+    previewHTML = `
+      <div class="card-preview">
+        <img class="yt-thumb" 
+             src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" 
+             alt=""
+             loading="lazy"
+             onerror="this.src='https://img.youtube.com/vi/${ytId}/default.jpg'">
+        <a href="${item.link}" target="_blank" rel="noopener" class="preview-overlay"></a>
+        <div class="play-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        ${item.best ? '<div class="best-badge">⭐ Top Pick</div>' : ''}
+      </div>`;
+  } else if (hasLink) {
+    const domain = (() => { try { return new URL(item.link).hostname.replace('www.',''); } catch(e) { return item.link; } })();
+    const isSpotify = item.link.includes('spotify');
+    const isPDF = item.link.includes('.pdf');
+    const icon = isPDF ? '📄' : isSpotify ? '🎵' : '🌐';
+    previewHTML = `
+      <div class="card-preview">
+        <a href="${item.link}" target="_blank" rel="noopener" class="preview-overlay"></a>
+        <div class="preview-placeholder">
+          <div class="icon">${icon}</div>
+          <div class="plink">${domain}</div>
+        </div>
+        ${item.best ? '<div class="best-badge">⭐ Top Pick</div>' : ''}
+      </div>`;
+  } else {
+    previewHTML = `
+      <div class="card-preview">
+        <div class="preview-placeholder">
+          <div class="icon">📚</div>
+          <div>No link available</div>
+        </div>
+        ${item.best ? '<div class="best-badge">⭐ Top Pick</div>' : ''}
+      </div>`;
+  }
+
+  // Tags
+  const tags = [];
+  if (item.category) tags.push(`<span class="tag tag-category">${item.category}</span>`);
+  if (item.topic) tags.push(`<span class="tag tag-topic" title="${item.topic}">${item.topic}</span>`);
+  if (item.age)   tags.push(`<span class="tag tag-age age-toggle" title="Click to show age notes">${item.age}</span>`);
+  if (item.use) {
+    const uses = String(item.use).split(',').map(u => u.trim()).filter(u => u);
+    uses.forEach(u => tags.push(`<span class="tag tag-use">${u}</span>`));
+  }
+  if (item.source) tags.push(`<span class="tag tag-source">${item.source}</span>`);
+  if (item.length && item.length !== 'None') tags.push(`<span class="tag tag-length">⏱ ${item.length}</span>`);
+  if (item.oces)  tags.push(`<span class="tag tag-oces">${item.oces}</span>`);
+
+  // Teaches / notes
+  const teachesHTML = item.teaches ? `<div class="teaches"><strong style="color:#a3b8cc;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;">Teaches: </strong>${item.teaches}</div>` : '';
+  const notesHTML = item.notes ? `<div class="notes-row"><strong style="color:#ff8c42;">Content Notes: </strong>${item.notes}</div>` : '';
+  const ageNotesHTML = item.ageNotes ? `<div class="notes-row age-notes" style="color:#94a3b8; display:none;"><strong>*Age Note:</strong> ${item.ageNotes}</div>` : '';
+
+  const linkHTML = hasLink
+    ? `<a class="card-link" href="${item.link}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Resource
+      </a>`
+    : `<span class="no-link">No link available</span>`;
+
+  card.innerHTML = `
+    ${previewHTML}
+    <div class="card-body">
+      <div class="card-title">${item.title}</div>
+      <div class="tags">${tags.join('')}</div>
+      ${teachesHTML}
+      ${notesHTML}
+      ${ageNotesHTML}
+      ${linkHTML}
+    </div>`;
+
+  const ageToggle = card.querySelector('.age-toggle');
+  const ageNotesEl = card.querySelector('.age-notes');
+  if (ageToggle && ageNotesEl) {
+    ageToggle.style.cursor = 'pointer';
+    ageToggle.addEventListener('click', () => {
+      ageNotesEl.style.display = ageNotesEl.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+
+  return card;
+}
+
+function renderAll() {
+  renderCards();
+}
+
+// ---- Event Listeners ----
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value; renderAll();
+});
+document.getElementById('gradeFilter').addEventListener('change', e => {
+  gradeFilter = e.target.value; renderAll();
+});
+document.getElementById('sourceFilter').addEventListener('change', e => {
+  sourceFilter = e.target.value; renderAll();
+});
+document.getElementById('topicFilter').addEventListener('change', e => {
+  topicFilter = e.target.value; renderAll();
+});
+document.getElementById('categoryFilter').addEventListener('change', e => {
+  categoryFilter = e.target.value;
+  renderAll();
+});
+document.getElementById('useFilter').addEventListener('change', e => {
+  useFilter = e.target.value; renderAll();
+});
+document.getElementById('bestOnlyBtn').addEventListener('click', function() {
+  bestOnly = !bestOnly;
+  if (bestOnly) {
+    this.classList.add('active');
+  } else {
+    this.classList.remove('active');
+  }
+  renderAll();
+});
+
+// Init
+populateTopicFilter();
+populateSourceFilter();
+populateCategoryFilter();
+renderAll();
+</script>
+</body>
+</html>
