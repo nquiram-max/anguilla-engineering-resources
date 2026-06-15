@@ -364,6 +364,9 @@
   }
   .empty-state .big { font-size: 48px; margin-bottom: 12px; }
   .empty-state h3 { font-family: "Avenir Next", "Segoe UI", sans-serif; font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+  .controls-toggle {
+  display: none;
+}
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -379,6 +382,39 @@
     main { padding: 12px 16px 40px; }
     .grid { grid-template-columns: 1fr; gap: 12px; }
     .card-preview { height: 160px; }
+        .controls-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 14px;
+      color: var(--muted);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .controls-toggle.open {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .controls-arrow {
+      margin-left: auto;
+      transition: transform .25s;
+    }
+    .controls-toggle.open .controls-arrow {
+      transform: rotate(180deg);
+    }
+    #controlsPanel {
+      display: none;
+    }
+    #controlsPanel.open {
+      display: flex;
+    }
   }
 
   @media (max-width: 480px) {
@@ -427,8 +463,12 @@
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     <input type="text" id="searchInput" placeholder="Search titles, topics, what it teaches…">
   </div>
-  <div class="controls">
-    <select id="categoryFilter">
+  <button class="controls-toggle" id="controlsToggle">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+    Filters
+    <svg class="controls-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="controls" id="controlsPanel">    <select id="categoryFilter">
       <option value="">All Categories</option>
       <option value="Videos">Videos</option>
       <option value="Digital Resources">Digital Resources</option>
@@ -455,7 +495,7 @@
     </select>
     <button class="filter-btn" id="bestOnlyBtn">⭐ Top Picks Only</button>
     <div class="result-count" id="resultCount"></div>
-  </div>
+  </div><!-- /controlsPanel -->
 </header>
 
 <main>
@@ -733,6 +773,16 @@ function renderAll() {
   renderCards();
 }
 
+const controlsToggle = document.getElementById('controlsToggle');
+const controlsPanel  = document.getElementById('controlsPanel');
+
+if (controlsToggle) {
+  controlsToggle.addEventListener('click', function() {
+    const isOpen = controlsPanel.classList.toggle('open');
+    this.classList.toggle('open', isOpen);
+  });
+}
+ 
 // ---- Event Listeners ----
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQ = e.target.value; renderAll();
@@ -769,6 +819,112 @@ populateTopicFilter();
 populateSourceFilter();
 populateCategoryFilter();
 renderAll();
+
+// ---- Add Resource Form ----
+const addToggle = document.getElementById('addToggle');
+const addForm   = document.getElementById('addForm');
+
+addToggle.addEventListener('click', function() {
+  const isOpen = addForm.classList.toggle('open');
+  this.classList.toggle('open', isOpen);
+  this.setAttribute('aria-expanded', isOpen);
+});
+
+document.getElementById('submitResource').addEventListener('click', function() {
+  // Clear previous errors
+  ['title','link','source','age'].forEach(f => {
+    document.getElementById('f-' + f).classList.remove('field-error');
+    document.getElementById('err-' + f).classList.remove('show');
+  });
+  document.getElementById('formSuccess').classList.remove('show');
+
+  const title    = document.getElementById('f-title').value.trim();
+  const link     = document.getElementById('f-link').value.trim();
+  const source   = document.getElementById('f-source').value.trim();
+  const age      = document.getElementById('f-age').value.trim();
+
+  let valid = true;
+  if (!title) {
+    document.getElementById('f-title').classList.add('field-error');
+    document.getElementById('err-title').classList.add('show');
+    valid = false;
+  }
+  if (!link) {
+    document.getElementById('f-link').classList.add('field-error');
+    document.getElementById('err-link').classList.add('show');
+    valid = false;
+  }
+  if (!source) {
+    document.getElementById('f-source').classList.add('field-error');
+    document.getElementById('err-source').classList.add('show');
+    valid = false;
+  }
+  if (!age) {
+    document.getElementById('f-age').classList.add('field-error');
+    document.getElementById('err-age').classList.add('show');
+    valid = false;
+  }
+  if (!valid) return;
+
+  const newItem = {
+    title,
+    link,
+    source,
+    age,
+    best:     document.getElementById('f-best').checked,
+    length:   document.getElementById('f-length').value.trim(),
+    topic:    document.getElementById('f-topic').value.trim(),
+    use:      document.getElementById('f-use').value,
+    ageNotes: document.getElementById('f-agenotes').value.trim(),
+    teaches:  document.getElementById('f-teaches').value.trim(),
+    notes:    document.getElementById('f-notes').value.trim(),
+    oces:     document.getElementById('f-oces').value.trim(),
+  };
+
+  const categoryName = document.getElementById('f-category').value || 'Videos';
+  const tab = DATA.find(t => t.name === categoryName);
+  if (tab) {
+    tab.items.push(newItem);
+  } else {
+    DATA.push({ name: categoryName, items: [newItem] });
+  }
+
+  // Refresh filters and grid
+  populateTopicFilter();
+  populateSourceFilter();
+  populateCategoryFilter();
+  renderAll();
+
+  // Reset form
+  document.getElementById('f-title').value    = '';
+  document.getElementById('f-link').value     = '';
+  document.getElementById('f-source').value   = '';
+  document.getElementById('f-age').value      = '';
+  document.getElementById('f-best').checked   = false;
+  document.getElementById('f-length').value   = '';
+  document.getElementById('f-topic').value    = '';
+  document.getElementById('f-use').value      = '';
+  document.getElementById('f-agenotes').value = '';
+  document.getElementById('f-teaches').value  = '';
+  document.getElementById('f-notes').value    = '';
+  document.getElementById('f-oces').value     = '';
+  document.getElementById('f-category').value = '';
+
+  document.getElementById('formSuccess').classList.add('show');
+  setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 3000);
+});
+
+document.getElementById('resetForm').addEventListener('click', function() {
+  ['f-title','f-link','f-source','f-age','f-length','f-topic','f-agenotes','f-teaches','f-notes','f-oces'].forEach(id => {
+    document.getElementById(id).value = '';
+    document.getElementById(id).classList.remove('field-error');
+  });
+  ['f-use','f-category'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-best').checked = false;
+  ['err-title','err-link','err-source','err-age'].forEach(id => document.getElementById(id).classList.remove('show'));
+  document.getElementById('formSuccess').classList.remove('show');
+});
+  
 </script>
 </body>
 </html>
