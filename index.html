@@ -446,6 +446,221 @@
     color: #ff8c42;
     font-weight: 700;
   }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header { padding: 20px 16px 12px; }
+    .header-top { gap: 12px; margin-bottom: 14px; }
+    .logo-icon { width: 36px; height: 36px; font-size: 18px; }
+    header h1 { font-size: 1.2rem; }
+    .subtitle { font-size: 0.88rem; margin-top: 6px; }
+    .subtitle-note { font-size: 0.8rem; margin-top: 3px; }
+    .search-wrap { margin-bottom: 10px; }
+    .controls { gap: 8px; margin-bottom: 0; }
+    select, .filter-btn { padding: 8px 12px; font-size: 12px; }
+    main { padding: 12px 16px 40px; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .card-preview { height: 160px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 16px 12px 10px; }
+    .header-top { gap: 10px; margin-bottom: 12px; }
+    .logo-icon { width: 32px; height: 32px; font-size: 16px; }
+    header h1 { font-size: 1rem; }
+    .subtitle { font-size: 0.8rem; line-height: 1.4; max-width: 100%; }
+    .subtitle-note { font-size: 0.75rem; line-height: 1.4; max-width: 100%; }
+    #searchInput { padding: 8px 12px 8px 34px; font-size: 13px; }
+    .search-wrap svg { left: 10px; width: 13px; height: 13px; }
+    .controls { gap: 6px; flex-direction: column; align-items: stretch; }
+    select, .filter-btn { padding: 8px 10px; font-size: 12px; width: 100%; }
+    main { padding: 10px 12px 32px; }
+    .grid { grid-template-columns: 1fr; gap: 10px; display: grid; }
+    .card-preview { height: 150px; }
+    .card-body { padding: 10px 12px 12px; gap: 8px; }
+    .card-title { font-size: 13px; }
+    .tags { gap: 4px; }
+    .tag { padding: 2px 7px; font-size: 10px; }
+    .teaches { font-size: 11px; }
+    .card-link { font-size: 11px; }
+  }
+
+  /* Keep the notes label on a single line; allow the note text to wrap */
+  .notes-row strong {
+    display: inline-block;
+    white-space: nowrap;
+    color: #ff8c42;
+    font-weight: 700;
+  }
+
+  /* ---- ADD RESOURCE PANEL ---- */
+  .add-resource-bar {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+  .add-resource-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    cursor: pointer;
+    color: var(--teal);
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    user-select: none;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+  .add-resource-toggle:hover { color: var(--accent); }
+  .add-resource-toggle .toggle-arrow {
+    transition: transform .25s;
+    flex-shrink: 0;
+  }
+  .add-resource-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+  .add-resource-form {
+    display: none;
+    padding: 20px 0 24px;
+    border-top: 1px solid var(--border);
+  }
+  .add-resource-form.open { display: block; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+  }
+  .form-group label .req {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="url"],
+  .form-group textarea,
+  .form-group select.form-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+    width: 100%;
+  }
+  .form-group input[type="text"]:focus,
+  .form-group input[type="url"]:focus,
+  .form-group textarea:focus,
+  .form-group select.form-select:focus {
+    border-color: var(--teal);
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 64px;
+  }
+  .form-group select.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d8fa3' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+  }
+  .form-group select.form-select option { background: #1c2430; }
+
+  .best-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .best-toggle-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .best-toggle-row span {
+    font-size: 13px;
+    color: var(--text);
+  }
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--teal), #1aa88c);
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 22px;
+    color: #0d1117;
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s, transform .15s;
+  }
+  .btn-submit:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-reset {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    color: var(--muted);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-reset:hover { border-color: var(--muted); color: var(--text); }
+  .form-success {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .form-success.show { display: flex; }
+  .form-error {
+    display: none;
+    color: #f87171;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .form-error.show { display: block; }
+  .field-error {
+    border-color: #f87171 !important;
+  }
+
+  @media (max-width: 768px) {
+    .add-resource-bar { padding: 0 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+  }
+  @media (max-width: 480px) {
+    .add-resource-bar { padding: 0 12px; }
+  }
 </style>
 </head>
 <body>
@@ -498,6 +713,130 @@
   </div><!-- /controlsPanel -->
 </header>
 
+<!-- ADD RESOURCE PANEL -->
+<div class="add-resource-bar">
+  <button class="add-resource-toggle" id="addToggle" aria-expanded="false">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    Add a Resource
+    <svg class="toggle-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+
+  <div class="add-resource-form" id="addForm">
+    <div class="form-grid">
+
+      <!-- Title (required) -->
+      <div class="form-group full">
+        <label for="f-title">Title <span class="req">*</span></label>
+        <input type="text" id="f-title" placeholder="e.g. How Bridges Work">
+        <div class="form-error" id="err-title">Title is required.</div>
+      </div>
+
+      <!-- Link (required) -->
+      <div class="form-group full">
+        <label for="f-link">Link <span class="req">*</span></label>
+        <input type="url" id="f-link" placeholder="https://...">
+        <div class="form-error" id="err-link">A valid link is required.</div>
+      </div>
+
+      <!-- Source (required) -->
+      <div class="form-group">
+        <label for="f-source">Source / Creator <span class="req">*</span></label>
+        <input type="text" id="f-source" placeholder="e.g. Mark Rober, NASA">
+        <div class="form-error" id="err-source">Source is required.</div>
+      </div>
+
+      <!-- Age / Grade (required) -->
+      <div class="form-group">
+        <label for="f-age">Grade Range <span class="req">*</span></label>
+        <input type="text" id="f-age" placeholder="e.g. K-12, 4-8, 9-12">
+        <div class="form-error" id="err-age">Grade range is required.</div>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="f-category">Category</label>
+        <select class="form-select" id="f-category">
+          <option value="">— Select category —</option>
+          <option value="Videos">Videos</option>
+          <option value="Digital Resources">Digital Resources</option>
+          <option value="Engineering Crash Course">Engineering Crash Course</option>
+          <option value="Video Series">Video Series</option>
+        </select>
+      </div>
+
+      <!-- Length -->
+      <div class="form-group">
+        <label for="f-length">Length / Duration</label>
+        <input type="text" id="f-length" placeholder="e.g. 12:34, 1 hour, 8 Pages">
+      </div>
+
+      <!-- Topic -->
+      <div class="form-group">
+        <label for="f-topic">General Topic</label>
+        <input type="text" id="f-topic" placeholder="e.g. Egg Drop, Robots, Solar Panels">
+      </div>
+
+      <!-- Use -->
+      <div class="form-group">
+        <label for="f-use">Use</label>
+        <select class="form-select" id="f-use">
+          <option value="">— Select use —</option>
+          <option value="lesson">Lesson</option>
+          <option value="enrichment">Enrichment</option>
+          <option value="family friendly">Family Friendly</option>
+          <option value="lesson, enrichment">Lesson &amp; Enrichment</option>
+          <option value="lesson, family friendly">Lesson &amp; Family Friendly</option>
+          <option value="enrichment, family friendly">Enrichment &amp; Family Friendly</option>
+          <option value="lesson, enrichment, family friendly">Lesson, Enrichment &amp; Family Friendly</option>
+        </select>
+      </div>
+
+      <!-- Grade Notes -->
+      <div class="form-group full">
+        <label for="f-agenotes">Grade / Age Notes</label>
+        <input type="text" id="f-agenotes" placeholder="e.g. bleeped out curse word, challenging concept">
+      </div>
+
+      <!-- Teaches -->
+      <div class="form-group full">
+        <label for="f-teaches">What It Teaches</label>
+        <textarea id="f-teaches" placeholder="e.g. Newton's 3rd Law, trial and error, energy transfer"></textarea>
+      </div>
+
+      <!-- Content Notes -->
+      <div class="form-group full">
+        <label for="f-notes">Additional Notes</label>
+        <textarea id="f-notes" placeholder="e.g. Crunch Labs Ad, goes with another video, content warnings"></textarea>
+      </div>
+
+      <!-- OCES Standards -->
+      <div class="form-group">
+        <label for="f-oces">OECS Standards</label>
+        <input type="text" id="f-oces" placeholder="e.g. ST.K.TE.NT.1">
+      </div>
+
+      <!-- Top Pick -->
+      <div class="form-group" style="justify-content: flex-end; padding-bottom: 2px;">
+        <label>&nbsp;</label>
+        <div class="best-toggle-row">
+          <input type="checkbox" id="f-best">
+          <span>⭐ Mark as Top Pick</span>
+        </div>
+      </div>
+
+    </div><!-- /form-grid -->
+
+    <div class="form-actions">
+      <button class="btn-submit" id="submitResource">Add to List</button>
+      <button class="btn-reset" id="resetForm">Clear</button>
+      <div class="form-success" id="formSuccess">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Resource added!
+      </div>
+    </div>
+  </div><!-- /add-resource-form -->
+</div><!-- /add-resource-bar -->
+  
 <main>
   <div class="grid" id="grid"></div>
 </main>
