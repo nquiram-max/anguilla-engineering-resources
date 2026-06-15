@@ -746,7 +746,8 @@ document.getElementById('categoryFilter').addEventListener('change', e => {
 document.getElementById('useFilter').addEventListener('change', e => {
   useFilter = e.target.value; renderAll();
 });
-document.getElementById('bestOnlyBtn').addEventListener('click', function() {
+document.getElementById('bestOnlyBtn').addEventListener('click', function(e) {
+  e.preventDefault();
   bestOnly = !bestOnly;
   if (bestOnly) {
     this.classList.add('active');
