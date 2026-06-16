@@ -685,7 +685,7 @@
   </button>
   <div class="controls" id="controlsPanel">    <select id="categoryFilter">
       <option value="">All Categories</option>
-      <option value="Videos">Videos</option>
+      <option value="Video">Videos</option>
       <option value="Digital Resources">Digital Resources</option>
       <option value="Engineering Crash Course">Engineering Crash Course</option>
       <option value="Video Series">Video Series</option>
@@ -757,7 +757,7 @@
         <label for="f-category">Category</label>
         <select class="form-select" id="f-category">
           <option value="">— Select category —</option>
-          <option value="Videos">Videos</option>
+          <option value="Video">Video</option>
           <option value="Digital Resources">Digital Resources</option>
           <option value="Engineering Crash Course">Engineering Crash Course</option>
           <option value="Video Series">Video Series</option>
@@ -1255,7 +1255,7 @@ document.getElementById('submitResource').addEventListener('click', function() {
     oecs:     document.getElementById('f-oecs').value.trim(),
   };
 
-  const categoryName = document.getElementById('f-category').value || 'Videos';
+  const categoryName = document.getElementById('f-category').value || 'Video';
   const tab = DATA.find(t => t.name === categoryName);
   if (tab) {
     tab.items.push(newItem);
