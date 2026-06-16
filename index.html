@@ -1255,6 +1255,11 @@ document.getElementById('submitResource').addEventListener('click', function() {
     oecs:     document.getElementById('f-oecs').value.trim(),
   };
 
+  // Save to localStorage
+  const stored = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+  stored.push({ ...newItem, category: categoryName });
+  localStorage.setItem('pendingResources', JSON.stringify(stored));
+
   const categoryName = document.getElementById('f-category').value || 'Video';
   const tab = DATA.find(t => t.name === categoryName);
   if (tab) {
@@ -1287,11 +1292,6 @@ document.getElementById('submitResource').addEventListener('click', function() {
   document.getElementById('formSuccess').classList.add('show');
   setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 3000);
 });
-
-// Save to localStorage
-const stored = JSON.parse(localStorage.getItem('pendingResources') || '[]');
-stored.push({ ...newItem, category: categoryName });
-localStorage.setItem('pendingResources', JSON.stringify(stored));
 
 document.getElementById('resetForm').addEventListener('click', function() {
   ['f-title','f-link','f-source','f-age','f-length','f-topic','f-agenotes','f-teaches','f-notes','f-oecs'].forEach(id => {
