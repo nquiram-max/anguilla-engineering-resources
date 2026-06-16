@@ -976,7 +976,7 @@ function populateCategoryFilter() {
   DATA.forEach(tab => {
     const opt = document.createElement('option');
     opt.value = tab.name;
-    opt.text = tab.name;
+    opt.text = tab.name === 'Video' ? 'Videos' : tab.name;
     sel.appendChild(opt);
   });
 }
