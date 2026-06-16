@@ -1239,8 +1239,8 @@ document.getElementById('submitResource').addEventListener('click', function() {
     document.getElementById('err-age').classList.add('show');
     valid = false;
   }
-  const category = document.getElementById('f-category').value;
-  if (!category) {
+  const categoryName = document.getElementById('f-category').value;
+  if (!categoryName) {
     document.getElementById('f-category').classList.add('field-error');
     document.getElementById('err-category').classList.add('show');
     valid = false;
@@ -1266,7 +1266,6 @@ document.getElementById('submitResource').addEventListener('click', function() {
   stored.push({ ...newItem, category: categoryName });
   localStorage.setItem('pendingResources', JSON.stringify(stored));
 
-  const categoryName = document.getElementById('f-category').value;
   const tab = DATA.find(t => t.name === categoryName);
   if (tab) {
     tab.items.push(newItem);
